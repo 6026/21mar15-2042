@@ -1,0 +1,24 @@
+<div class="s-prose js-post-body" itemprop="text">
+<p>I like <code>var/log/apt/history.log</code>. It is very concise.</p>
+
+<p>Also note that older logs are archived with <code>logrotate</code> once a month. To combine the current <code>history.log</code> and all the older compressed <code>history.log</code> files you can use <code>cat</code> and <code>zcat</code> like this:</p>
+
+<p><code>cd /var/log/apt &amp;&amp; cat history.log &gt; ~/Desktop/allhistory.log &amp;&amp; zcat history.log*gz &gt;&gt; ~/Desktop/allhistory.log &amp;&amp; cd</code></p>
+
+<p>Then you can, for example, use <code>grep</code> to find what you need:</p>
+
+<p><code>$ grep package_name ~/Desktop/allhistory.log</code> where you will put what you want in place of <code>package_name</code>.</p>
+
+<pre><code>$ grep google ~/Desktop/allhistory.log
+Upgrade: google-chrome-stable:amd64 (32.0.1700.102-1, 33.0.1750.117-1)
+Upgrade: google-chrome-stable:amd64 (31.0.1650.48-1, 32.0.1700.77-1)
+Upgrade: google-chrome-stable:amd64 (32.0.1700.77-1, 32.0.1700.102-1)
+Upgrade: google-chrome-stable:amd64 (30.0.1599.101-1, 31.0.1650.48-1)
+$ 
+</code></pre>
+
+<p>And, <a href="https://askubuntu.com/users/57704/bohr">Bohr</a>, in a comment, suggested using <code>zgrep</code> directly if one is searching for lines related to a specific package. This works for me assuming I'm searching both <code>history.log</code> and its existing archived files for <code>smtube</code>:</p>
+
+<pre><code>zgrep smtube /var/log/apt/history*
+</code></pre>
+    </div>
