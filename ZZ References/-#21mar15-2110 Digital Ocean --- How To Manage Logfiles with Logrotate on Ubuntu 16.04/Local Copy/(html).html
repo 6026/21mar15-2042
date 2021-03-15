@@ -1,0 +1,289 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!DOCTYPE html>
+<html platform="linux"><head>
+  <meta http-equiv="Content-Security-Policy" content="default-src chrome:; img-src data: *; media-src *; object-src 'none'">
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <meta name="viewport" content="width=device-width; user-scalable=0">
+  <link rel="stylesheet" href="chrome://global/skin/aboutReader.css" type="text/css">
+<link rel="stylesheet" href="chrome://global/skin/narrate.css"><title>How To Manage Logfiles with Logrotate on Ubuntu 16.04</title><link rel="shortcut icon" href="https://www.digitalocean.com/assets/community/favicon-16x16-ce9c1eb6d969d5b2ec276ae4b715756aa0e63106f33dc53a836687fdfee49ecd.png"></head>
+
+<body class="light sans-serif loaded" style="--font-size:20px; --content-width:30em;">
+  <div class="top-anchor"></div>
+
+  <div id="toolbar" class="toolbar-container">
+    <div class="toolbar reader-toolbar">
+      <div class="reader-controls" articledir="ltr">
+        <button class="close-button button " aria-label="Leseansicht schließen"><span class="hover-label">Leseansicht schließen</span></button>
+        <ul class="dropdown style-dropdown">
+          <li>
+            <button class="dropdown-toggle button style-button" aria-label="Schrifteinstellungen"><span class="hover-label">Schrifteinstellungen</span></button>
+          </li>
+          <li class="dropdown-popup">
+            <div class="dropdown-arrow"></div>
+            <div class="font-type-buttons radiorow"><input id="radio-itemsans-serif-button" type="radio" class="radio-button" name="font-type" checked="checked"><label for="radio-itemsans-serif-button" class="sans-serif-button" checked="true">Sans-serif</label><input id="radio-itemserif-button" type="radio" class="radio-button" name="font-type"><label for="radio-itemserif-button" class="serif-button">Serif</label></div>
+            <div class="font-size-buttons buttonrow">
+              <button class="minus-button" title="Kleinere Schrift"></button>
+              <span class="font-size-value">5</span>
+              <button class="plus-button" title="Größere Schrift">
+            </button></div>
+            <div class="content-width-buttons buttonrow">
+               <button class="content-width-minus-button" title="Schmalerer Inhalt"></button>
+               <span class="content-width-value">3</span>
+               <button class="content-width-plus-button" title="Breiterer Inhalt">
+            </button></div>
+            <div class="line-height-buttons buttonrow">
+                <button class="line-height-minus-button" title="Kleinerer Zeilenabstand"></button>
+                <span class="line-height-value">4</span>
+                <button class="line-height-plus-button" title="Größerer Zeilenabstand">
+            </button></div>
+            <div class="color-scheme-buttons radiorow"><input id="radio-itemlight-button" type="radio" class="radio-button" name="color-scheme" checked="checked"><label for="radio-itemlight-button" class="light-button" checked="true" title="Helles Farbschema">Hell</label><input id="radio-itemdark-button" type="radio" class="radio-button" name="color-scheme"><label for="radio-itemdark-button" class="dark-button" title="Dunkles Farbschema">Dunkel</label><input id="radio-itemsepia-button" type="radio" class="radio-button" name="color-scheme"><label for="radio-itemsepia-button" class="sepia-button" title="Sepia-Farbschema">Sepia</label></div>
+          </li>
+        </ul>
+      <ul class="dropdown narrate-dropdown"><li><button class="dropdown-toggle button narrate-toggle" aria-label="Anhören"><span class="hover-label">Anhören</span></button></li><li class="dropdown-popup"><div class="narrate-row narrate-control"><button class="narrate-skip-previous" disabled="disabled" title="Zurück"></button><button class="narrate-start-stop" title="Wiedergeben"></button><button class="narrate-skip-next" disabled="disabled" title="Vor"></button></div><div class="narrate-row narrate-rate"><input class="narrate-rate-input" value="0" step="5" max="100" min="-100" type="range" title="Geschwindigkeit"></div><div class="narrate-row narrate-voices"><div class="voiceselect voice-select"><button class="select-toggle" aria-controls="voice-options">
+      <span class="label">Stimme:</span> <span class="current-voice">Standard</span>
+    </button>
+    <div class="options" id="voice-options" role="listbox"><button data-value="automatic" class="option selected" tabindex="-1" role="option" aria-selected="true">Standard</button><button data-value="urn:moz-tts:speechd:english_rp?en-GB" class="option" tabindex="-1" role="option">Englisch (en-GB)</button><button data-value="urn:moz-tts:speechd:english?en-GB" class="option" tabindex="-1" role="option">Englisch (en-GB)</button><button data-value="urn:moz-tts:speechd:english_wmids?en-GB" class="option" tabindex="-1" role="option">Englisch (en-GB)</button><button data-value="urn:moz-tts:speechd:english-north?en-GB" class="option" tabindex="-1" role="option">Englisch (en-GB)</button><button data-value="urn:moz-tts:speechd:en-scottish?en-SC" class="option" tabindex="-1" role="option">Englisch (en-SC)</button><button data-value="urn:moz-tts:speechd:english-us?en-US" class="option" tabindex="-1" role="option">Englisch (en-US)</button><button data-value="urn:moz-tts:speechd:en-westindies?en-WI" class="option" tabindex="-1" role="option">Englisch (en-WI)</button><button data-value="urn:moz-tts:speechd:default?en" class="option" tabindex="-1" role="option">Englisch (en)</button></div></div></div><div class="dropdown-arrow"></div></li></ul><button data-buttonid="pocket-button" class="button pocket-button" aria-label="In Pocket speichern" style="background-image: url(&quot;chrome://global/skin/reader/pocket.svg&quot;); background-size: 16px 16px;"><span class="hover-label">In Pocket speichern</span></button></div>
+    </div>
+  </div>
+
+  <div class="container" style="--line-height:1.6em;" dir="ltr">
+    <div class="header reader-header reader-show-element">
+      <a class="domain reader-domain" href="https://www.digitalocean.com/community/tutorials/how-to-manage-logfiles-with-logrotate-on-ubuntu-16-04">digitalocean.com</a>
+      <div class="domain-border"></div>
+      <h1 class="reader-title">How To Manage Logfiles with Logrotate on Ubuntu 16.04</h1>
+      <div class="credits reader-credits">Brian Boucheron</div>
+      <div class="meta-data">
+        <div class="reader-estimated-time" dir="ltr">10-12 Minuten</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="content">
+      <div class="moz-reader-content reader-show-element"><div id="readability-page-1" class="page"><div data-growable-markdown="">
+  
+  <h3 id="introduction">Introduction</h3>
+
+<p>Logrotate is a system utility that manages the automatic rotation and
+ compression of log files. If log files were not rotated, compressed, 
+and periodically pruned, they could eventually consume all available 
+disk space on a system.</p>
+
+<p>Logrotate is installed by default on Ubuntu 16.04, and is set up to 
+handle the log rotation needs of all installed packages, including <code>rsyslog</code>, the default system log processor.</p>
+
+<p>In this article, we will explore the default Logrotate configuration,
+ then configure log rotation for a fictional custom application.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>This tutorial assumes you have an Ubuntu 16.04 server, with a non-root sudo-enabled user, as described in <a href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-16-04">Initial Server Setup with Ubuntu 16.04</a>.</p>
+
+<p>Logrotate is available on many other Linux distributions as well, but
+ the default configuration may be quite different. Other sections of 
+this tutorial will still apply as long as your version of Logrotate is 
+similar to Ubuntu 16.04’s. Follow Step 1 to determine your Logrotate 
+version.</p>
+
+<p>Log into your server as your sudo-enabled user to begin.</p>
+
+<h2 id="confirming-your-logrotate-version">Confirming Your Logrotate Version</h2>
+
+<p>If you’re using a non-Ubuntu server, first make sure Logrotate is installed by asking for its version information:</p>
+<pre><code><p>Output</p>logrotate <span>3.8.7</span>
+</code></pre>
+<p>If Logrotate is not installed you will get an error. Please install 
+the software using your Linux distribution’s package manager.</p>
+
+<p>If Logrotate is installed but the version number is significantly 
+different, you may have issues with some of the configuration discussed 
+in this tutorial. Refer to the documentation for your specific version 
+of Logrotate by reading its <code>man</code> page:</p>
+
+<p>Next we’ll look at Logrotate’s default configuration structure on Ubuntu.</p>
+
+<h2 id="exploring-the-logrotate-configuration">Exploring the Logrotate Configuration</h2>
+
+<p>Logrotate’s configuration information can generally be found in two places on Ubuntu:</p>
+
+<ul>
+<li><code>/etc/logrotate.conf</code>: this file contains some default 
+settings and sets up rotation for a few logs that are not owned by any 
+system packages. It also uses an <code>include</code> statement to pull in configuration from any file in the <code>/etc/logrotate.d</code> directory.</li>
+<li><code>/etc/logrotate.d/</code>: this is where any packages you 
+install that need help with log rotation will place their Logrotate 
+configuration. On a standard install you should already have files here 
+for basic system tools like <code>apt</code>, <code>dpkg</code>, <code>rsyslog</code> and so on.</li>
+</ul>
+
+<p>By default, <code>logrotate.conf</code> will configure weekly log rotations (<code>weekly</code>), with log files owned by the <strong>root</strong> user and the <strong>syslog</strong> group (<code>su root syslog</code>), with four log files being kept (<code>rotate 4</code>), and new empty log files being created after the current one is rotated (<code>create</code>).</p>
+
+<p>Let’s take a look at a package’s Logrotate configuration file in <code>/etc/logrotate.d</code>. <code>cat</code> the file for the <code>apt</code> package utility:</p>
+<pre><code><p>Output</p>/var/log/apt/term.log {
+  rotate 12
+  monthly
+  compress
+  missingok
+  notifempty
+}
+
+/var/log/apt/history.log {
+  rotate 12
+  monthly
+  compress
+  missingok
+  notifempty
+}
+</code></pre>
+<p>This file contains configuration blocks for two different log files in the <code>/var/log/apt/</code> directory: <code>term.log</code> and <code>history.log</code>.
+ They both have the same options. Any options not set in these 
+configuration blocks will inherit the default values or those set in <code>/etc/logrotate.conf</code>. The options set for the <code>apt</code> logs are:</p>
+
+<ul>
+<li><code>rotate 12</code>: keep twelve old log files.</li>
+<li><code>monthly</code>: rotate once a month.</li>
+<li><code>compress</code>: compress the rotated files. this uses <code>gzip</code> by default and results in files ending in <code>.gz</code>. The compression command can be changed using the <code>compresscmd</code> option.</li>
+<li><code>missingok</code>: don’t write an error message if the log file is missing.</li>
+<li><code>notifempty</code>: don’t rotate the log file if it is empty.</li>
+</ul>
+
+<p>There are many more configuration options available. You can read about all of them by typing <code>man logrotate</code> on the command line to bring up Logrotate’s manual page.</p>
+
+<p>Next, we’ll set up a configuration file to handle logs for a fictional service.</p>
+
+<h2 id="setting-up-an-example-config">Setting Up an Example Config</h2>
+
+<p>To manage log files for applications outside of the pre-packaged and pre-configured system services, we have two options:</p>
+
+<ol>
+<li>Create a new Logrotate configuration file and place it in <code>/etc/logrotate.d/</code>. This will be run daily as the <strong>root</strong> user along with all the other standard Logrotate jobs.</li>
+<li>Create a new configuration file and run it outside of Ubuntu’s 
+default Logrotate setup. This is only really necessary if you need to 
+run Logrotate as a non-<strong>root</strong> user, or if you want to rotate logs more frequently than daily (an <code>hourly</code> configuration in <code>/etc/logrotate.d/</code> would be ineffective, because the system’s Logrotate setup only runs once a day).</li>
+</ol>
+
+<p>Let’s walk through these two options with some example setups.</p>
+
+<h3 id="adding-configuration-to-etc-logrotate-d">Adding Configuration to <code>/etc/logrotate.d/</code></h3>
+
+<p>We want to configure log rotation for a fictional web server that puts an <code>access.log</code> and <code>error.log</code> into <code>/var/log/example-app/</code>. It runs as the <code>www-data</code> user and group.</p>
+
+<p>To add some configuration to <code>/etc/logrotate.d/</code>, first open up a new file there:</p>
+
+<p>Here is an example config file that could handle these logs:</p>
+<p>/etc/logrotate.d/example-app</p>
+<p>Some of the new configuration directives in this file are:</p>
+
+<ul>
+<li><code>create 0640 www-data www-data</code>: this creates a new empty log file after rotation, with the specified permissions (<code>0640</code>), owner (<code>www-data</code>), and group (also <code>www-data</code>).</li>
+<li><code>sharedscripts</code>: this flag means that any scripts added 
+to the configuration are run only once per run, instead of for each file
+ rotated. Since this configuration would match two log files in the <code>example-app</code> directory, the script specified in <code>postrotate</code> would run twice without this option.</li>
+<li><code>postrotate</code> to <code>endscript</code>: this block 
+contains a script to run after the log file is rotated. In this case 
+we’re reloading our example app. This is sometimes necessary to get your
+ application to switch over to the newly created log file.
+Note that <code>postrotate</code> runs before logs are compressed. 
+Compression could take a long time, and your software should switch to 
+the new logfile immediately. For tasks that need to run <em>after</em> logs are compressed, use the <code>lastaction</code> block instead.</li>
+</ul>
+
+<p><strong>After customizing the config to fit your needs</strong> and saving it in <code>/etc/logrotate.d</code>, you can test it by doing a dry run:</p>
+
+<p>This calls <code>logrotate</code>, points it to the standard configuration file, and turns on debug mode.</p>
+
+<p>Information will print out about which log files Logrotate is 
+handling and what it would have done to them. If all looks well, you’re 
+done. The standard Logrotate job will run once a day and include your 
+new configuration.</p>
+
+<p>Next, we’ll try a setup that doesn’t use Ubuntu’s default configuration at all.</p>
+
+<h3 id="creating-an-independent-logrotate-configuration">Creating an Independent Logrotate Configuration</h3>
+
+<p>In this example we have an app running as our user <strong>sammy</strong>, generating logs that are stored in <code>/home/sammy/logs/</code>. We want to rotate these logs hourly, so we need to set this up outside of the <code>/etc/logrotate.d</code> structure provided by Ubuntu.</p>
+
+<p>First, we’ll create a configuration file in our home directory. Open it in a text editor:</p>
+
+<p>Then paste in the following configuration:</p>
+<p>/home/sammy/logrotate.conf</p>
+<p>Save and close the file. We’ve seen all these options in previous 
+steps, but let’s summarize: this configuration will rotate the files 
+hourly, compressing and keeping twenty-four old logs and creating a new 
+log file to replace the rotated one.</p>
+
+<p>You’ll need to customize the configuration to suit your application, but this is a good start.</p>
+
+<p>To test that it works, let’s make a log file:</p>
+
+<p>Now that we have a blank log file in the right spot, let’s run the <code>logrotate</code> command.</p>
+
+<p>Because the logs are owned by <strong>sammy</strong> we don’t need to use <code>sudo</code>. We <em>do</em> need to specify a <em>state</em> file though. This file records what <code>logrotate</code>
+ saw and did last time it ran, so that it knows what to do the next time
+ it runs. This is handled for us when using the Ubuntu Logrotate setup 
+(it can be found at <code>/var/lib/logrotate/status</code>), but we need to do it manually now.</p>
+
+<p>We’ll have Logrotate put the state file right in our home directory 
+for this example. I can go anywhere that’s accessible and convenient:</p>
+<pre><code>logrotate /home/<span>sammy</span>/logrotate.conf --state /home/<span>sammy</span>/logrotate-state --verbose
+</code></pre><pre><code><p>Output</p>reading config file /home/sammy/logrotate.conf
+
+Handling 1 logs
+
+rotating pattern: /home/sammy/logs/*.log  hourly (24 rotations)
+empty log files are rotated, old logs are removed
+considering log /home/sammy/logs/access.log
+  log does not need rotating
+</code></pre>
+<p><code>--verbose</code> will print out detailed information about what
+ Logrotate is doing. In this case it looks like it didn’t rotate 
+anything. This is Logrotate’s first time seeing this log file, so as far
+ as it knows, the file is zero hours old and it shouldn’t be rotated.</p>
+
+<p>If we look at the state file, we’ll see that Logrotate recorded some information about the run:</p>
+<pre><code><p>Output</p>logrotate state -- version 2
+"/home/sammy/logs/access.log" 2017-11-7-19:0:0
+</code></pre>
+<p>Logrotate noted the logs that it saw and when it last considered them
+ for rotation. If we run this same command one hour later, the log will 
+be rotated as expected.</p>
+
+<p>If you want to force Logrotate to rotate the log file when it otherwise would not have, use the <code>--force</code> flag:</p>
+
+<p>This is useful when testing <code>postrotate</code> and other scripts.</p>
+
+<p>Finally, we need to set up a cron job to run Logrotate every hour. Open your user’s crontab:</p>
+
+<p>This will open a up a text file. There may be some comments already 
+in the file that explain the basic syntax expected. Move the cursor down
+ to a new blank line at the end of the file and add the following:</p>
+<pre><code><p>crontab</p>14 * * * * /usr/sbin/logrotate /home/sammy/logrotate.conf --state /home/sammy/logrotate-state
+</code></pre>
+<p>This task will run on the 14th minute of every hour, every day. It runs basically the same <code>logrotate</code> command we ran previously, though we expanded <code>logrotate</code> to its full path  of <code>/usr/sbin/logrotate</code> just to be safe. It’s good practice to be as explicit as possible when writing cron jobs.</p>
+
+<p>Save the file and exit. This will install the crontab and our task will run on the specified schedule.</p>
+
+<p>If we revisit our log directory in about an hour we should find the rotated and compressed log file <code>access.log.1.gz</code> (or <code>.2.gz</code> if you ran Logrotate with the <code>--force</code> flag).</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this tutorial we verified our Logrotate version, explored the 
+default Ubuntu Logrotate configuration, and set up two different types 
+of custom configurations. To learn more about the command line and 
+configuration options available for Logrotate, you can read its manual 
+page by running <code>man logrotate</code> in your terminal.</p>
+
+</div></div></div>
+    </div>
+
+    <div>
+      <div class="reader-message"></div>
+    </div>
+    <div aria-owns="toolbar"></div>
+  </div>
+
+
+
+</body></html>

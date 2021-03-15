@@ -1,0 +1,1188 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<!DOCTYPE html>
+<html platform="linux"><head>
+  <meta http-equiv="Content-Security-Policy" content="default-src chrome:; img-src data: *; media-src *; object-src 'none'">
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <meta name="viewport" content="width=device-width; user-scalable=0">
+  <link rel="stylesheet" href="chrome://global/skin/aboutReader.css" type="text/css">
+<link rel="stylesheet" href="chrome://global/skin/narrate.css"><title>Linux systems: Scraping up information about apt updates</title><link rel="shortcut icon" href="https://www.networkworld.com/www.idge.nww/favicon.ico"></head>
+
+<body class="light sans-serif loaded" style="--font-size:20px; --content-width:30em;">
+  <div class="top-anchor"></div>
+
+  <div id="toolbar" class="toolbar-container">
+    <div class="toolbar reader-toolbar">
+      <div class="reader-controls" articledir="ltr">
+        <button class="close-button button " aria-label="Leseansicht schließen"><span class="hover-label">Leseansicht schließen</span></button>
+        <ul class="dropdown style-dropdown">
+          <li>
+            <button class="dropdown-toggle button style-button" aria-label="Schrifteinstellungen"><span class="hover-label">Schrifteinstellungen</span></button>
+          </li>
+          <li class="dropdown-popup">
+            <div class="dropdown-arrow"></div>
+            <div class="font-type-buttons radiorow"><input id="radio-itemsans-serif-button" type="radio" class="radio-button" name="font-type" checked="checked"><label for="radio-itemsans-serif-button" class="sans-serif-button" checked="true">Sans-serif</label><input id="radio-itemserif-button" type="radio" class="radio-button" name="font-type"><label for="radio-itemserif-button" class="serif-button">Serif</label></div>
+            <div class="font-size-buttons buttonrow">
+              <button class="minus-button" title="Kleinere Schrift"></button>
+              <span class="font-size-value">5</span>
+              <button class="plus-button" title="Größere Schrift">
+            </button></div>
+            <div class="content-width-buttons buttonrow">
+               <button class="content-width-minus-button" title="Schmalerer Inhalt"></button>
+               <span class="content-width-value">3</span>
+               <button class="content-width-plus-button" title="Breiterer Inhalt">
+            </button></div>
+            <div class="line-height-buttons buttonrow">
+                <button class="line-height-minus-button" title="Kleinerer Zeilenabstand"></button>
+                <span class="line-height-value">4</span>
+                <button class="line-height-plus-button" title="Größerer Zeilenabstand">
+            </button></div>
+            <div class="color-scheme-buttons radiorow"><input id="radio-itemlight-button" type="radio" class="radio-button" name="color-scheme" checked="checked"><label for="radio-itemlight-button" class="light-button" checked="true" title="Helles Farbschema">Hell</label><input id="radio-itemdark-button" type="radio" class="radio-button" name="color-scheme"><label for="radio-itemdark-button" class="dark-button" title="Dunkles Farbschema">Dunkel</label><input id="radio-itemsepia-button" type="radio" class="radio-button" name="color-scheme"><label for="radio-itemsepia-button" class="sepia-button" title="Sepia-Farbschema">Sepia</label></div>
+          </li>
+        </ul>
+      <ul class="dropdown narrate-dropdown"><li><button class="dropdown-toggle button narrate-toggle" aria-label="Anhören"><span class="hover-label">Anhören</span></button></li><li class="dropdown-popup"><div class="narrate-row narrate-control"><button class="narrate-skip-previous" disabled="disabled" title="Zurück"></button><button class="narrate-start-stop" title="Wiedergeben"></button><button class="narrate-skip-next" disabled="disabled" title="Vor"></button></div><div class="narrate-row narrate-rate"><input class="narrate-rate-input" value="0" step="5" max="100" min="-100" type="range" title="Geschwindigkeit"></div><div class="narrate-row narrate-voices"><div class="voiceselect voice-select"><button class="select-toggle" aria-controls="voice-options">
+      <span class="label">Stimme:</span> <span class="current-voice">Standard</span>
+    </button>
+    <div class="options" id="voice-options" role="listbox"><button data-value="automatic" class="option selected" tabindex="-1" role="option" aria-selected="true">Standard</button><button data-value="urn:moz-tts:speechd:english_rp?en-GB" class="option" tabindex="-1" role="option">Englisch (en-GB)</button><button data-value="urn:moz-tts:speechd:english?en-GB" class="option" tabindex="-1" role="option">Englisch (en-GB)</button><button data-value="urn:moz-tts:speechd:english_wmids?en-GB" class="option" tabindex="-1" role="option">Englisch (en-GB)</button><button data-value="urn:moz-tts:speechd:english-north?en-GB" class="option" tabindex="-1" role="option">Englisch (en-GB)</button><button data-value="urn:moz-tts:speechd:en-scottish?en-SC" class="option" tabindex="-1" role="option">Englisch (en-SC)</button><button data-value="urn:moz-tts:speechd:english-us?en-US" class="option" tabindex="-1" role="option">Englisch (en-US)</button><button data-value="urn:moz-tts:speechd:en-westindies?en-WI" class="option" tabindex="-1" role="option">Englisch (en-WI)</button><button data-value="urn:moz-tts:speechd:default?en" class="option" tabindex="-1" role="option">Englisch (en)</button></div></div></div><div class="dropdown-arrow"></div></li></ul><button data-buttonid="pocket-button" class="button pocket-button" aria-label="In Pocket speichern" style="background-image: url(&quot;chrome://global/skin/reader/pocket.svg&quot;); background-size: 16px 16px;"><span class="hover-label">In Pocket speichern</span></button></div>
+    </div>
+  </div>
+
+  <div class="container" style="--line-height:1.6em;" dir="ltr">
+    <div class="header reader-header reader-show-element">
+      <a class="domain reader-domain" href="https://www.networkworld.com/article/3333784/linux-systems-scraping-up-information-about-apt-updates.html">networkworld.com</a>
+      <div class="domain-border"></div>
+      <h1 class="reader-title">Linux systems: Scraping up information about apt updates</h1>
+      <div class="credits reader-credits">Sandra Henry-Stocker</div>
+      <div class="meta-data">
+        <div class="reader-estimated-time" dir="ltr">11-14 Minuten</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="content">
+      <div class="moz-reader-content reader-show-element"><div id="readability-page-1" class="page"><section role="main" id="page-wrapper">
+	
+		
+		
+		
+
+		<article itemscope="" itemtype="http://schema.org/BlogPosting">
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+	
+		
+		
+		
+		
+		
+					    			
+		
+	
+	
+	
+	
+	
+
+ 
+ 
+ 
+ 
+  
+  
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+		
+	
+
+
+
+	
+		
+	
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+	
+			
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		<meta itemprop="keywords" content="linux,  ">
+	
+
+
+
+
+
+
+
+<header>
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		<div itemscope="" itemtype="http://schema.org/Person" itemprop="author">
+				
+				
+					
+					
+						
+							
+							
+							
+							
+						
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><a href="https://www.networkworld.com/author/Sandra-Henry_Stocker/" rel="author" title="Sandra Henry-Stocker"><img src="(html)-Dateien/sandra_h-s-3-100646724-byline.jpg" alt="Sandra Henry-Stocker" itemprop="image" width="34"></a></p><div>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+						
+							<p itemscope="" itemtype="http://schema.org/Person" itemprop="author">
+								
+								
+								By <span itemprop="name"></span>, 
+								
+								<span>
+									
+								</span>
+								
+							  	 Unix Dweeb, 
+								
+									
+								
+
+
+
+
+
+
+
+
+
+
+
+
+<span itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization"><span itemprop="name">Network World</span><meta itemprop="url" content="https://www.networkworld.com"><meta itemprop="logo" content="https://idge.staticworld.net/nww/nww_logo_300x300.png"></span> 
+								
+								<span>|</span>
+								
+								<span itemprop="datePublished" content="2019-01-18T11:27-0800"><span>Jan 18, 2019 11:27 am PST</span>
+									
+								</span>
+							</p>
+							
+							
+																				
+										
+					
+				</div>
+			</div>
+	
+	
+	
+	
+	
+	
+	
+		
+		
+			
+		
+	
+	
+
+	
+	
+		
+	
+	
+	
+	
+		<section>
+			<h3 itemprop="description">Where can you find information on Linux updates performed with apt commands? Check the /var/log/apt directory.</h3>
+		</section>
+	
+	
+	
+	
+	
+	
+	
+	
+			
+	
+	
+	
+
+	
+		
+			
+		
+	
+	
+		
+	
+	
+		
+			
+			
+				
+				
+				
+				
+					
+					
+						
+					
+				
+				
+			
+		
+	
+	
+	
+	
+	
+</header>
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		
+
+
+
+		<section>
+
+			
+				
+				
+					
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+	
+	
+	
+	
+		
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+			
+			
+			
+			
+		
+	
+	
+	
+	
+	
+	
+			
+	
+	
+	
+	
+	
+	
+		
+		
+			
+		
+	
+	
+	
+	
+	
+		
+			
+				
+				
+				
+					
+				
+				
+			
+		
+		
+	
+	
+		
+		
+			<div id="drr-container" itemprop="articleBody">
+		
+		
+		
+		
+	
+		
+			
+			
+				<p>When you use the <strong>apt</strong> command to install new 
+packages or run routine upgrades on your Debian-based Linux system, you 
+might wonder where information about your activities are being recorded.</p><p>For
+ one, your history file probably retains information on the commands 
+that you use, though history files like ~/.bash_history will only keep 
+the most recent commands that you've run — depending on your <strong>$HISTSIZE</strong>
+ setting — and generally will not include dates and times. There is, 
+however, another place to find information about apt commands and that 
+place is&nbsp;<strong>/var/log/apt</strong>.</p><p>The /var/log/apt 
+directory contains a number of log files — the history.log file, plus a 
+series of older versions of the file named history.log.1.gz, 
+history.log.2.gz, history.log.3,gz and so on. Each of these logs will 
+contain information on apt commands that have been run within a 
+particular timeframe.</p><pre>-rw-r--r-- 1 root root  8165 Jan 17 13:26 history.log
+-rw-r--r-- 1 root root  2088 Dec 26 15:48 history.log.1.gz
+-rw-r--r-- 1 root root  2105 Nov 30 06:48 history.log.2.gz
+-rw-r--r-- 1 root root 21150 Oct 31 06:45 history.log.3.gz
+-rw-r--r-- 1 root root  3700 Oct  3 18:13 history.log.4.gz
+-rw-r--r-- 1 root root  2544 Aug 31 06:05 history.log.5.gz
+-rw-r--r-- 1 root root  2788 Jul 27 15:42 history.log.6.gz
+-rw-r--r-- 1 root root  2910 Jun 28  2018 history.log.7.gz
+-rw-r--r-- 1 root root 29216 May 31  2018 history.log.8.gz
+</pre><p>As you can see, these log files are relatively small and quite a
+ few generations of the file are retained. All but the current log are 
+gzipped to save disk space. The file dates illustrate that the logs are 
+in this example system rolled over approximately once a month.</p><h2>What's in a history.log file?</h2><p>A
+ good deal of the information in /var/log/apt's history.log files 
+describe the packages that were updated when a system upgrade was 
+performed. This record from Jan. 10 shows the command that was run (apt 
+upgrade), the user who ran the upgrade command, and the list of upgraded
+ source packages.</p><pre>Start-Date: 2019-01-10  07:19:33
+Commandline: apt upgrade
+Requested-By: jdoe (1234)
+Upgrade: libreoffice-style-breeze:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18
+.10.2), libreoffice-math:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), l
+ibpangoft2-1.0-0:amd64 (1.42.4-3, 1.42.4-3ubuntu1), gedit:amd64 (3.30.2-0ubuntu0
+.18.10.1, 3.30.2-0ubuntu0.18.10.2), gir1.2-mutter-3:amd64 (3.30.2-1~ubuntu18.10.
+1, 3.30.2-1~ubuntu18.10.2), python3-software-properties:amd64 (0.96.27, 0.96.27.
+1), libreoffice-gtk3:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), libre
+office-core:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), libasound2-dat
+a:amd64 (1.1.6-1ubuntu1, 1.1.6-1ubuntu1.2), gir1.2-pango-1.0:amd64 (1.42.4-3, 1.
+42.4-3ubuntu1), libmutter-3-0:amd64 (3.30.2-1~ubuntu18.10.1, 3.30.2-1~ubuntu18.1
+0.2), software-properties-gtk:amd64 (0.96.27, 0.96.27.1), python3-uno:amd64 (1:6
+.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), mutter-common:amd64 (3.30.2-1~ubuntu
+18.10.1, 3.30.2-1~ubuntu18.10.2), libreoffice-style-galaxy:amd64 (1:6.1.2-0ubunt
+u1.1, 1:6.1.3-0ubuntu0.18.10.2), libreoffice-base-core:amd64 (1:6.1.2-0ubuntu1.1
+, 1:6.1.3-0ubuntu0.18.10.2), libpangoxft-1.0-0:amd64 (1.42.4-3, 1.42.4-3ubuntu1)
+, libreoffice-ogltrans:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), lib
+reoffice-impress:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), libreoffi
+ce-style-elementary:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), nautil
+us:amd64 (1:3.26.4-0ubuntu7, 1:3.26.4-0ubuntu7.1), libnautilus-extension1a:amd64
+ (1:3.26.4-0ubuntu7, 1:3.26.4-0ubuntu7.1), libpangocairo-1.0-0:amd64 (1.42.4-3,
+1.42.4-3ubuntu1), psmisc:amd64 (23.1-1build1, 23.1-1ubuntu1.1), libreoffice-styl
+e-colibre:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), ure:amd64 (6.1.2
+-0ubuntu1.1, 6.1.3-0ubuntu0.18.10.2), gnome-shell-common:amd64 (3.30.1-2ubuntu1.
+18.10.1, 3.30.1-2ubuntu1.18.10.2), libreoffice-writer:amd64 (1:6.1.2-0ubuntu1.1,
+ 1:6.1.3-0ubuntu0.18.10.2), libreoffice-common:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.
+3-0ubuntu0.18.10.2), gedit-common:amd64 (3.30.2-0ubuntu0.18.10.1, 3.30.2-0ubuntu
+0.18.10.2), libasound2:amd64 (1.1.6-1ubuntu1, 1.1.6-1ubuntu1.2), fonts-opensymbo
+l:amd64 (2:102.10+LibO6.1.2-0ubuntu1.1, 2:102.10+LibO6.1.3-0ubuntu0.18.10.2), li
+breoffice-pdfimport:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), uno-li
+bs3:amd64 (6.1.2-0ubuntu1.1, 6.1.3-0ubuntu0.18.10.2), nautilus-data:amd64 (1:3.2
+6.4-0ubuntu7, 1:3.26.4-0ubuntu7.1), gnome-shell:amd64 (3.30.1-2ubuntu1.18.10.1,
+3.30.1-2ubuntu1.18.10.2), libreoffice-style-tango:amd64 (1:6.1.2-0ubuntu1.1, 1:6
+.1.3-0ubuntu0.18.10.2), libreoffice-help-en-us:amd64 (1:6.1.2-0ubuntu1, 1:6.1.3-
+0ubuntu0.18.10.2), libreoffice-gnome:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0
+.18.10.2), libreoffice-calc:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2)
+, libpango-1.0-0:amd64 (1.42.4-3, 1.42.4-3ubuntu1), libreoffice-draw:amd64 (1:6.
+1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), libreoffice-avmedia-backend-gstreamer
+:amd64 (1:6.1.2-0ubuntu1.1, 1:6.1.3-0ubuntu0.18.10.2), mutter:amd64 (3.30.2-1~ub
+untu18.10.1, 3.30.2-1~ubuntu18.10.2), software-properties-common:amd64 (0.96.27,
+ 0.96.27.1)
+End-Date: 2019-01-10  07:20:04
+</pre><p>We can also tell from the start and end times that this upgrade
+ took less than a minute to run, starting at 07:19:33 and ending at 
+07:20:04.</p><p>You may also see a number of <strong>unattended upgrades</strong>&nbsp;noted in the file — like this one:</p><pre>Start-Date: 2019-01-11  06:58:34
+Commandline: /usr/bin/unattended-upgrade
+Upgrade: libexiv2-14:amd64 (0.25-4, 0.25-4ubuntu0.1)
+End-Date: 2019-01-11  06:58:35
+</pre><p>Unattended upgrades will happen only&nbsp;if they have been configured to run on the system. Check the <strong>/etc/apt/apt.conf.d/50unattended-upgrades</strong>
+ file on your system to determine if this is the case. A section of 
+configuration commands like what is shown below would indicate that 
+automatic security updates have been enabled:</p><pre>// Note that in Ubuntu security updates may pull in new dependencies
+// from non-security sources (e.g. chromium). By allowing the release
+// pocket these get automatically pulled in.
+Unattended-Upgrade::Allowed-Origins {
+        "${distro_id}:${distro_codename}";
+        "${distro_id}:${distro_codename}-security";
+        // Extended Security Maintenance; doesn't necessarily exist for
+        // every release and this system may not have it installed, but if
+        // available, the policy for updates is such that unattended-upgrades
+        // should also install from here by default.
+        "${distro_id}ESM:${distro_codename}";
+//      "${distro_id}:${distro_codename}-updates";
+//      "${distro_id}:${distro_codename}-proposed";
+//      "${distro_id}:${distro_codename}-backports";
+};
+</pre><p>If unattended upgrades are not set up on your system, you can set them up with this command:</p><pre>$ sudo apt install unattended-upgrades
+</pre><p>The <strong>//</strong> characters turn many of the lines in 
+this configuration file into comments. As is, only security updates will
+ be automatically installed. <strong>ESM</strong>&nbsp;in the configuation lines shown above refers to "extended security maintenance".</p><h2>Command history and dates</h2><p>You
+ can insert dates and times into your command history file if you use 
+commands shown below. The second command makes this change a permanent 
+part of your startup routine, so you can have that information added to 
+your history file routinely.</p><pre>$ export HISTTIMEFORMAT="%Y-%m-%d %T "
+$ export HISTTIMEFORMAT="%Y-%m-%d %T " &gt; ~/.bash_history
+</pre><p>If you make these changes, date/time information will be added 
+to your history file. Here's an example of what that should look like:</p><pre>#1547757540
+figlet "That's all, folks!"
+</pre><p>That #1547757540 shown above represents the date and time that 
+the command was run. Viewing this information with the history command, 
+the date and time will be displayed depending on the format setting you 
+selected.</p><pre> 881  2019-01-17 15:39:00 figlet "That's all, folks!"
+</pre><h2>That's all, folks!</h2><p>Recovering information on when 
+system upgrades were done and when packages were added to a system can 
+be a bit time-consuming. In addition, that information — both in your 
+command history and in the system log files — is somewhat short-lived. 
+Your command history may be available for only a few days (depending on 
+how many commands you use on a daily basis), and your system log files 
+will probably last only some number of months. That's why it's good to 
+also check the&nbsp;/var/log/apt directory.</p>
+			
+		
+		
+	
+		
+		
+			
+		
+		
+		
+		
+			
+			
+			
+			
+
+
+
+
+
+
+
+
+
+
+<div>
+	
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+			
+
+		
+			
+				
+					
+					
+					
+						
+							
+					
+						
+					
+					
+					
+					
+					
+					
+						
+					
+				
+				
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+		
+			<p>Join the Network World communities on <a href="https://www.facebook.com/NetworkWorld/" target="_blank">Facebook</a> and <a href="https://www.linkedin.com/company/network-world" target="_blank">LinkedIn</a> to comment on topics that are top of mind.  </p>
+		
+	
+
+	
+
+
+</div>
+		
+		
+	</div>
+	
+		
+	
+	
+	
+		
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+			
+	   		
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		<div>
+					<p>Sandra Henry-Stocker has been administering Unix systems for 
+more than 30 years. She describes herself as "USL" (Unix as a second 
+language) but remembers enough English to write books and buy groceries.
+ She lives in the mountains in Virginia where, when not working with or 
+writing about Unix, she's chasing the bears away from her bird feeders.</p>
+			</div>
+	
+
+
+
+	   		
+	   		
+			
+	
+	
+	
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+	<p>Copyright © 2019 <span>IDG Communications, Inc.</span></p>
+
+	
+		 
+	
+	
+	
+	
+	
+		
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	 
+	
+
+
+
+
+
+
+
+	
+
+
+
+	
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+			
+
+		
+			
+				
+					
+					
+					
+						
+							
+					
+						
+					
+					
+					
+					
+					
+					
+						
+					
+				
+				
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+					
+
+
+
+
+
+
+
+
+
+
+				
+			
+		
+		</section>
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+	
+		
+			
+				
+					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+	
+	
+
+
+				
+				
+			
+			
+		
+
+		
+			
+			
+		
+			
+				
+					
+							
+	
+	
+
+
+
+	
+		
+			
+
+
+
+
+
+
+
+
+
+
+
+
+	<div id="tso-wrapper"><h3>Sponsored Links</h3><ul><li><a href="http://pubads.g.doubleclick.net/gampad/clk?id=5601054695&amp;iu=/8456/IDG.G_B2B_CIO.com">
+ This is no time for a vulnerable network. Find the DDoS threat before 
+it’s too late. Protect Your Customers. - Protect Availability 3</a></li><li><a href="http://pubads.g.doubleclick.net/gampad/clk?id=5596634798&amp;iu=/8456/IDG.G_B2B_NetworkWorld.com"> Cisco SecureX Simplify with the broadest, most integrated security platform</a></li><li><a href="http://pubads.g.doubleclick.net/gampad/clk?id=5601815489&amp;iu=/8456/IDG.G_B2B_CIO.com">
+ Digital Transformation wasn’t supposed to happen this way. You need 
+visibility to gain control. Take control with NETSCOUT – Business 
+Continuity</a></li><li><a href="http://pubads.g.doubleclick.net/gampad/clk?id=5588288823&amp;iu=/8456/IDG.G_B2B_NetworkWorld.com">
+ dtSearch® instantly searches terabytes of files, emails, databases, web
+ data.  See site for hundreds of reviews; enterprise &amp; developer 
+evaluations</a></li><li><a href="http://pubads.g.doubleclick.net/gampad/clk?id=5600293638&amp;iu=/8456/IDG.G_B2B_CIO.com"> Software defines your networks. NETSCOUT defines your visibility. See it all. – SDN</a></li><li><a href="http://pubads.g.doubleclick.net/gampad/clk?id=5628877383&amp;iu=/8456"> Want lightning fast analytics? See why the Incorta data analytics platform is changing enterprise data forever.</a></li></ul></div>
+	
+	
+
+			
+		
+	
+	
+
+
+
+
+		</article>
+
+	</section></div></div>
+    </div>
+
+    <div>
+      <div class="reader-message"></div>
+    </div>
+    <div aria-owns="toolbar"></div>
+  </div>
+
+
+
+</body></html>
